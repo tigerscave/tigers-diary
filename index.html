@@ -7,13 +7,16 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    
     <div>Tigers Diary</div>
     <div>v1.1.0</div>
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black" onclick="handleAuthClick()">Authorize</button>
+    <button id="signout_button" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black" onclick="handleSignoutClick()">Sign Out</button>
+    <p style="margin-bottom: 4rem;"></p>
     <div style="display:flex;">
       <div style="display: flex; flex-direction: column; margin-right:6px;">
-        <button class="border border-solid width:4rem">Top</button>
-        <button class="border border-b">Create</button>
+        <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black">Top</button>
+        <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black">Create</button>
       </div>
       <table class="border">
         <tr class="border">
@@ -24,36 +27,38 @@
           <th class="border">Delete</th>
         </tr>
         <tr>
-          <td class="border">2023/11/21</td>
-          <td class="border">ada</td>
-          <td class="border">tigers diaryのモックを作成</td>
-          <td class="border"><i class="material-icons">face</i></td>
+          <td class="border practice-date"></td>
+          <td class="border practice-name"></td>
+          <td class="border practice-content"></td>
+          <td class="border"><i class="material-icons">edit</i></td>
           <td class="border"><i class="material-icons">delete</i></td>
         </tr>
         <tr>
-          <td class="border">2023/11/21</td>
-          <td class="border">rah</td>
-          <td class="border">asyncio</td>
-          <td class="border">編集する</td>
-          <td class="border">削除する</td>
+          <td class="border practice-date"></td>
+          <td class="border practice-name"></td>
+          <td class="border practice-content"></td>
+          <td class="border"><i class="material-icons">edit</i></td>
+          <td class="border"><i class="material-icons">delete</i></td>
         </tr>
         <tr>
-          <td class="border">2023/11/21</td>
-          <td class="border">fal</td>
-          <td class="border">ada-serialのsegmentation fault</td>
-          <td class="border">編集する</td>
-          <td class="border">削除する</td>
+          <td class="border practice-date"></td>
+          <td class="border practice-name"></td>
+          <td class="border practice-content"></td>
+          <td class="border"><i class="material-icons">edit</i></td>
+          <td class="border"><i class="material-icons">delete</i></td>
+        </tr>
+        <tr class="edit-row">
+          <td class="border practice-date"></td>
+          <td class="border practice-name"></td>
+          <td class="border practice-content"></td>
+          <td class="border"><i class="material-icons">edit</i></td>
+          <td class="border"><i class="material-icons">delete</i></td>
         </tr>
       </table>
     </div>
 
-    <p>Sheets API Quickstart</p>
-
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black" onclick="handleAuthClick()">Authorize</button>
-    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
-
     <pre id="content" style="white-space: pre-wrap;"></pre>
+    <pre id="content-practice" style="white-space: pre-wrap;"></pre> <!--データ取得失敗時、エラーメッセージが出る。-->
 
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>

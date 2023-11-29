@@ -70,7 +70,8 @@ function handleAuthClick() {
     }
     document.getElementById('signout_button').style.visibility = 'visible'; //サインアウトボタンを出現
     document.getElementById('authorize_button').innerText = 'Refresh'; //認証（Authorize）ボタンの文字をRefreshに変更。
-    await listMajors(); //listMajorsの完了を待つ。
+    // await listMajors(); //listMajorsの完了を待つ。
+    await showProgressReport();
   };
   
   //新しいセッションの場合は、ユーザーに対してアカウント選択と同意を求め、既存のセッションの場合はこれをスキップして、アクセストークンを取得する。
@@ -98,30 +99,63 @@ function handleSignoutClick() {
   }
 }
 
-/**
- * スプレッドシート
- * リンク先はこちら → https://docs.google.com/spreadsheets/d/1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI/edit
- */
-async function listMajors() {
+// スプレッドシートの出現
+async function showProgressReport() {
   let response;
   try {
-    // スプレッドシートのデータ取得
     response = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI', // ExcelID
-      range: 'master!A2:E', // 範囲指定
+      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI', 
+      range: 'master!A2:C5', 
     });
   } catch (err) {
-    document.getElementById('content').innerText = err.message;
+    document.getElementById('content-practice').innerText = err.message;
     return;
   }
   const range = response.result;
-  if (!range || !range.values || range.values.length == 0) { // 取得したデータ結果がない、データの値が存在しない、データの範囲が０の場合、エラーメッセージを返す。
-    document.getElementById('content').innerText = 'No values found.';
+  if (!range || !range.values || range.values.length == 0) { 
+    document.getElementById('content-practice').innerText = 'No values found.';
     return;
   }
-  // 取得したデータ結果がある場合、データを特定の形式に整形 → 表示用の文字列を作成
-  const output = range.values.reduce(
-      (str, row) => `${str}${row[0]}, ${row[1]}, ${row[2]}\n`,
-      'Date, Name, Content\n');
-  document.getElementById('content').innerText = output;
+
+  const practiceDateElements = document.querySelectorAll('.practice-date')
+  const practiceNameElements = document.querySelectorAll('.practice-name')
+  const practiceContentElements = document.querySelectorAll('.practice-content')
+
+ for(let i = 0; i < range.values.length; i++) {
+   const date = range.values[i][0];
+   const name = range.values[i][1];
+   const content = range.values[i][2];
+
+   practiceDateElements[i].textContent = date;
+   practiceNameElements[i].textContent = name;
+   practiceContentElements[i].textContent = content;
+ }
 }
+
+// /**
+//  * スプレッドシート
+//  * リンク先はこちら → https://docs.google.com/spreadsheets/d/1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI/edit
+//  */
+// async function listMajors() {
+//   let response;
+//   try {
+//     // スプレッドシートのデータ取得
+//     response = await gapi.client.sheets.spreadsheets.values.get({
+//       spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI', // ExcelID
+//       range: 'master!A2:E', // 範囲指定
+//     });
+//   } catch (err) {
+//     document.getElementById('content').innerText = err.message;
+//     return;
+//   }
+//   const range = response.result;
+//   if (!range || !range.values || range.values.length == 0) { // 取得したデータ結果がない、データの値が存在しない、データの範囲が０の場合、エラーメッセージを返す。
+//     document.getElementById('content').innerText = 'No values found.';
+//     return;
+//   }
+//   // 取得したデータ結果がある場合、データを特定の形式に整形 → 表示用の文字列を作成
+//   const output = range.values.reduce(
+//       (str, row) => `${str}${row[0]}, ${row[1]}, ${row[2]}\n`,
+//       'Date, Name, Content\n');
+//   document.getElementById('content').innerText = output;
+// }
