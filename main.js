@@ -21,7 +21,7 @@ document.getElementById('signout_button').style.visibility = 'hidden';
 /**
  * Google APIクライアントライブラリをロードする。その後、initializeGapiClient関数を実行する。
  */
-function gapiLoaded() { 
+function gapiLoaded() {
   gapi.load('client', initializeGapiClient);
 }
 
@@ -55,7 +55,7 @@ function gisLoaded() { //Google Identity Services（Googleアカウントを使�
  * ライブラリが正常に初期化された場合に、関数を実行する。
  */
 function maybeEnableButtons() {
-  if (gapiInited && gisInited) { 
+  if (gapiInited && gisInited) {
     document.getElementById('authorize_button').style.visibility = 'visible';
   }
 }
@@ -73,15 +73,15 @@ function handleAuthClick() {
     // await listMajors(); //listMajorsの完了を待つ。
     await showProgressReport();
   };
-  
+
   //新しいセッションの場合は、ユーザーに対してアカウント選択と同意を求め、既存のセッションの場合はこれをスキップして、アクセストークンを取得する。
   if (gapi.client.getToken() === null) {
     // ユーザーが初めてアプリにアクセス、もしくは以前のセッションがクリアされた状態
     // ユーザーに対して、Googleアカウントの選択とデータの共有について許可を求めるためのダイアログが表示される。ユーザーはアプリに対して、アクセスを許可するかどうかを選択する。
-    tokenClient.requestAccessToken({prompt: 'consent'});
+    tokenClient.requestAccessToken({ prompt: 'consent' });
   } else {
     // 既にセッションが存在している場合、アクセストークンを取得する。
-    tokenClient.requestAccessToken({prompt: ''});//promptパラメータは空の文字列に設定されている。これにより、アカウントの選択と同意ダイアログがスキップされる。
+    tokenClient.requestAccessToken({ prompt: '' });//promptパラメータは空の文字列に設定されている。これにより、アカウントの選択と同意ダイアログがスキップされる。
   }
 }
 
@@ -104,32 +104,67 @@ async function showProgressReport() {
   let response;
   try {
     response = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI', 
-      range: 'master!A2:C5', 
+      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
+      range: 'master!A2:C5',
     });
   } catch (err) {
-    document.getElementById('content-practice').innerText = err.message;
+    document.getElementById('error-message').innerText = err.message;
     return;
   }
   const range = response.result;
-  if (!range || !range.values || range.values.length == 0) { 
-    document.getElementById('content-practice').innerText = 'No values found.';
+  if (!range || !range.values || range.values.length == 0) {
+    document.getElementById('error-message').innerText = 'No values found.';
     return;
   }
 
-  const practiceDateElements = document.querySelectorAll('.practice-date')
-  const practiceNameElements = document.querySelectorAll('.practice-name')
-  const practiceContentElements = document.querySelectorAll('.practice-content')
+  const dateElements = document.querySelectorAll('.date')
+  const nameElements = document.querySelectorAll('.engineer-name')
+  const contentElements = document.querySelectorAll('.progress-content')
 
- for(let i = 0; i < range.values.length; i++) {
-   const date = range.values[i][0];
-   const name = range.values[i][1];
-   const content = range.values[i][2];
+  const newRow = document.createElement('tr')
 
-   practiceDateElements[i].textContent = date;
-   practiceNameElements[i].textContent = name;
-   practiceContentElements[i].textContent = content;
- }
+  for (let i = 0; i < range.values.length; i++) {
+    const date = range.values[i][0];
+    const name = range.values[i][1];
+    const content = range.values[i][2];
+
+    dateElements[i].textContent = date;
+    nameElements[i].textContent = name;
+    contentElements[i].textContent = content;
+
+
+    const newDate = document.createElement('td')
+    newDate.className = 'border date';
+    newDate.textContent = date;
+    newRow.appendChild(newDate);
+
+    const newName = document.createElement('td')
+    newName.className = 'border engineer-name'
+    newName.textContent = name;
+    newRow.appendChild(newName);
+
+    const newContent = document.createElement('td')
+    newContent.className = 'border progress-content'
+    newContent.textContent = content;
+    newRow.appendChild(newContent)
+
+    const editCell = document.createElement('td');
+    editCell.className = 'border';
+    const editIcon = document.createElement('i');
+    editIcon.className = 'material-icons';
+    editIcon.textContent = 'edit';
+    editCell.appendChild(editIcon);
+    newRow.appendChild(editCell);
+
+    const deleteCell = document.createElement('td');
+    deleteCell.className = 'border';
+    const deleteIcon = document.createElement('i');
+    deleteIcon.className = 'material-icons';
+    deleteIcon.textContent = 'delete';
+    deleteCell.appendChild(deleteIcon);
+    newRow.appendChild(deleteCell);
+  }
+  document.getElementById('gapi-sheets').appendChild(newRow);
 }
 
 // /**

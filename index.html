@@ -1,67 +1,70 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="dist.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <title>Sheets API Quickstart</title>
-    <meta charset="utf-8" />
-  </head>
-  <body>
-    <div>Tigers Diary</div>
-    <div>v1.1.0</div>
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black" onclick="handleAuthClick()">Authorize</button>
-    <button id="signout_button" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black" onclick="handleSignoutClick()">Sign Out</button>
-    <p style="margin-bottom: 4rem;"></p>
-    <div style="display:flex;">
-      <div style="display: flex; flex-direction: column; margin-right:6px;">
-        <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black">Top</button>
-        <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black">Create</button>
-      </div>
-      <table class="border">
-        <tr class="border">
-          <th class="border">Date</th>
-          <th class="border">Name</th>
-          <th class="border">Diary</th>
-          <th class="border">Edit</th>
-          <th class="border">Delete</th>
-        </tr>
-        <tr>
-          <td class="border practice-date"></td>
-          <td class="border practice-name"></td>
-          <td class="border practice-content"></td>
-          <td class="border"><i class="material-icons">edit</i></td>
-          <td class="border"><i class="material-icons">delete</i></td>
-        </tr>
-        <tr>
-          <td class="border practice-date"></td>
-          <td class="border practice-name"></td>
-          <td class="border practice-content"></td>
-          <td class="border"><i class="material-icons">edit</i></td>
-          <td class="border"><i class="material-icons">delete</i></td>
-        </tr>
-        <tr>
-          <td class="border practice-date"></td>
-          <td class="border practice-name"></td>
-          <td class="border practice-content"></td>
-          <td class="border"><i class="material-icons">edit</i></td>
-          <td class="border"><i class="material-icons">delete</i></td>
-        </tr>
-        <tr class="edit-row">
-          <td class="border practice-date"></td>
-          <td class="border practice-name"></td>
-          <td class="border practice-content"></td>
-          <td class="border"><i class="material-icons">edit</i></td>
-          <td class="border"><i class="material-icons">delete</i></td>
-        </tr>
-      </table>
+
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <title>Sheets API Quickstart</title>
+  <meta charset="utf-8" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <div>Tigers Diary</div>
+  <div>v1.1.0</div>
+  <!--Add buttons to initiate auth sequence and sign out-->
+  <button id="authorize_button"
+    class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md"
+    onclick="handleAuthClick()">Authorize</button>
+  <button id="signout_button" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black"
+    onclick="handleSignoutClick()">Sign Out</button>
+  <p style="margin-bottom: 4rem;"></p>
+  <div style="display:flex;">
+    <div style="display: flex; flex-direction: column; margin-right:6px;">
+      <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black">Top</button>
+      <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black">Create</button>
     </div>
+    <!--Top画面-->
+    <table class="border" id="gapi-sheets">
+      <tr class="border">
+        <th class="border">Date</th>
+        <th class="border">Name</th>
+        <th class="border">Diary</th>
+        <th class="border">Edit</th>
+        <th class="border">Delete</th>
+      </tr>
+      <tr>
+        <td class="border date"></td>
+        <td class="border engineer-name"></td>
+        <td class="border progress-content"></td>
+        <td class="border"><i class="material-icons">edit</i></td>
+        <td class="border"><i class="material-icons">delete</i></td>
+      </tr>
+    </table>
+  </div>
+  <!--Create画面-->
+  <div class="mt-3 mb-2">
+    <label for="name-select">name:</label>
+  
+    <select name="engineers" id="engineers" class="p-1">
+      <option value="">--Choose your name--</option>
+      <option value="ada">Ada</option>
+      <option value="rah">Rah</option>
+      <option value="falcon">Falcon</option>
+      <option value="jigen">Jigen</option>
+    </select>
+  </div>
+  <div class="flex mt-2">
+    <div>diary:</div>
+    <input type="text" class="border border-black">
+  </div>
+  <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black mt-3">POST</button>
 
-    <pre id="content" style="white-space: pre-wrap;"></pre>
-    <pre id="content-practice" style="white-space: pre-wrap;"></pre> <!--データ取得失敗時、エラーメッセージが出る。-->
+  <pre id="content" style="white-space: pre-wrap;"></pre>
+  <pre id="error-message" style="white-space: pre-wrap;"></pre> <!--データ取得失敗時、エラーメッセージが出る。-->
 
-    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
-    <script src="main.js"></script>
-  </body>
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+  <script src="main.js"></script>
+</body>
+
 </html>
