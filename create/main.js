@@ -1,8 +1,8 @@
 'use strict';
 
 const postBtn = document.getElementById('post-btn');
-const approvedBtn = document.getElementById('ok-btn');
-const approvedBoard = document.getElementById('approved-board')
+const approvedBtn = document.getElementById('approverd-btn');
+const approvedBoard = document.getElementById('approved-modal')
 
 postBtn.addEventListener('click', () => {
   console.log("postBtn is pushed")
