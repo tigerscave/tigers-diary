@@ -119,13 +119,13 @@ async function showProgressReport() {
       range: 'master!A2:C9',// 範囲指定
     });
   } catch (err) {
-    document.getElementById('error-message').innerText = err.message;
+    document.getElementById('error-view').innerText = err.message;
     return;
   }
   const range = response.result;
   // 取得したデータ結果がない、データの値が存在しない、データの範囲が０の場合、エラーメッセージを返す。
   if (!range || !range.values || range.values.length == 0) {
-    document.getElementById('error-message').innerText = 'No values found.';
+    document.getElementById('error-view').innerText = 'No values found.';
     return;
   }
 
@@ -137,20 +137,20 @@ async function showProgressReport() {
     const content = range.values[i][2];
     const newRow = document.createElement('tr');
 
-    const newDate = document.createElement('td');
-    newDate.className = 'border date';
-    newDate.textContent = date;
-    newRow.appendChild(newDate);
+    const dateCell = document.createElement('td');
+    dateCell.className = 'border date';
+    dateCell.textContent = date;
+    newRow.appendChild(dateCell);
 
-    const newName = document.createElement('td');
-    newName.className = 'border engineer-name';
-    newName.textContent = name;
-    newRow.appendChild(newName);
+    const nameCell = document.createElement('td');
+    nameCell.className = 'border engineer-name';
+    nameCell.textContent = name;
+    newRow.appendChild(nameCell);
 
-    const newContent = document.createElement('td');
-    newContent.className = 'border progress-content';
-    newContent.textContent = content;
-    newRow.appendChild(newContent);
+    const contentCell = document.createElement('td');
+    contentCell.className = 'border progress-content';
+    contentCell.textContent = content;
+    newRow.appendChild(contentCell);
 
     const editCell = document.createElement('td');
     editCell.className = 'border';
