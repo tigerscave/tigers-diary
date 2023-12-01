@@ -3,7 +3,7 @@
 
 <head>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <title>Sheets API Quickstart</title>
+  <title>Tigers Diary Top Page</title>
   <meta charset="utf-8" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -11,56 +11,32 @@
 <body>
   <div>Tigers Diary</div>
   <div>v1.1.0</div>
-  <!--Add buttons to initiate auth sequence and sign out-->
-  <button id="authorize_button"
-    class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md"
-    onclick="handleAuthClick()">Authorize</button>
-  <button id="signout_button" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black"
-    onclick="handleSignoutClick()">Sign Out</button>
-  <p style="margin-bottom: 4rem;"></p>
-  <div style="display:flex;">
-    <div style="display: flex; flex-direction: column; margin-right:6px;">
-      <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black">Top</button>
-      <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black">Create</button>
+  <!--サインイン、サインアウトのボタン-->
+  <button id="authorize-btn"
+    class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Authorize</button>
+  <button id="signout-btn" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Sign Out</button>
+  <!--TopページとCreateページの切り替え-->
+  <div class="flex mt-8">
+    <div class="flex flex-col mr-6">
+      <a class="create-btn bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Top</a>
+      <a href="create/index.html" id="create-btn"
+        class="create-btn bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Create</a>
     </div>
     <!--Top画面-->
-    <table class="border" id="gapi-sheets">
-      <tr class="border">
-        <th class="border">Date</th>
-        <th class="border">Name</th>
-        <th class="border">Diary</th>
-        <th class="border">Edit</th>
-        <th class="border">Delete</th>
-      </tr>
-      <tr>
-        <td class="border date"></td>
-        <td class="border engineer-name"></td>
-        <td class="border progress-content"></td>
-        <td class="border"><i class="material-icons">edit</i></td>
-        <td class="border"><i class="material-icons">delete</i></td>
-      </tr>
-    </table>
+    <div id="top-page">
+      <table class="border" id="gapi-sheets">
+        <tr class="border">
+          <th class="border" style="width:5rem;">Date</th>
+          <th class="border" style="width:5rem;">Name</th>
+          <th class="border" style="width:30rem;">Diary</th>
+          <th class="border" style="width:5rem;">Edit</th>
+          <th class="border" style="width:5rem;">Delete</th>
+        </tr>
+      </table>
+    </div>
   </div>
-  <!--Create画面-->
-  <div class="mt-3 mb-2">
-    <label for="name-select">name:</label>
-  
-    <select name="engineers" id="engineers" class="p-1">
-      <option value="">--Choose your name--</option>
-      <option value="ada">Ada</option>
-      <option value="rah">Rah</option>
-      <option value="falcon">Falcon</option>
-      <option value="jigen">Jigen</option>
-    </select>
-  </div>
-  <div class="flex mt-2">
-    <div>diary:</div>
-    <input type="text" class="border border-black">
-  </div>
-  <button class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black mt-3">POST</button>
-
-  <pre id="content" style="white-space: pre-wrap;"></pre>
-  <pre id="error-message" style="white-space: pre-wrap;"></pre> <!--データ取得失敗時、エラーメッセージが出る。-->
+  <!--データ取得失敗時、ここにエラーメッセージが出る。-->
+  <pre id="error-message" class="white-space-pre-wrap"></pre>
 
   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
   <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
