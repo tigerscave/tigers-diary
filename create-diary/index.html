@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tigers Diary Create Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <div>Tigers Diary</div>
+  <div>v1.1.0</div>
+  <!--Createページ-->
+  <div class="flex mt-8">
+    <div class="flex flex-col mr-6">
+      <a href="../index.html" id="top-btn"
+        class="top-btn bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Top</a>
+      <a class="create-btn bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Create</a>
+    </div>
+    <div id="create-page" class="mt-3 mb-2">
+      <label for="name-select">name:</label>
+
+      <select name="engineers" id="engineers" class="p-1">
+        <option value="">--Choose your name--</option>
+        <option value="ada">Ada</option>
+        <option value="rah">Rah</option>
+        <option value="falcon">Falcon</option>
+        <option value="eight">Eight</option>
+        <option value="jigen">Jigen</option>
+      </select>
+      <div class="flex mt-2">
+        <div>diary:</div>
+        <input type="text" class="border border-black ml-4">
+      </div>
+      <button id="post-btn" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black mt-3 shadow-black/30 shadow-md">POST</button>
+      <!--ひとこと日記、投稿後のメッセージ-->
+      <div id="confirm-modal" class="hidden mt-6 bg-blue-100 fade-out">
+        <div class="text-black-500 p-2 rounded">Diary has been posted</div>
+        <button id="confirm-btn" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded shadow-black/30 shadow-md">OK</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!--データ取得失敗時、ここにエラーメッセージが出る。-->
+  <pre id="error-view" class="white-space-pre-wrap"></pre>
+
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+  <script src="../main.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>
