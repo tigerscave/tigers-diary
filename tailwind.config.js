@@ -3,7 +3,8 @@ module.exports = {
   content: [
     './index.html',
     './main.js',
-    '/create/index.html'
+    '/create-diary/index.html',
+    '/create-diary/main.js'
   ],
   theme: {
     extend: {},

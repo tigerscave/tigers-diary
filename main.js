@@ -72,10 +72,13 @@ authorizeBtn.addEventListener('click', () => {
       throw (resp); //エラーを投げる。
     }
     document.getElementById('signout-btn').style.visibility = 'visible'; //サインアウトボタンを出現
-    document.getElementById('authorize-btn').innerText = 'Refresh'; //認証（Authorize）ボタンの文字をRefreshに変更。
+    authorizeBtn.innerText = 'Refresh'; //認証（Authorize）ボタンの文字をRefreshに変更。
     // showProgressReportの完了を待つ。
-    await showProgressReport();
+      await showProgressReport();
   };
+  if(authorizeBtn.innerText === 'Refresh') {
+    window.location.reload();
+  }
 
   //新しいセッションの場合は、ユーザーに対してアカウント選択と同意を求め、既存のセッションの場合はこれをスキップして、アクセストークンを取得する。
   if (gapi.client.getToken() === null) {
@@ -116,7 +119,7 @@ async function showProgressReport() {
     // スプレッドシートのデータ取得
     response = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',// ExcelID
-      range: 'master!A2:C9',// 範囲指定
+      range: 'master!A2:C100',// 範囲指定
     });
   } catch (err) {
     document.getElementById('error-view').innerText = err.message;
@@ -170,3 +173,28 @@ async function showProgressReport() {
     tableBody.appendChild(newRow);
   }
 }
+
+// const spreadsheetId = '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI'
+// const dataRange = 'master!A2:C100'
+// const data = getSpreadsheetData(spreadsheetId, dataRange);
+// function sortDataByDate(data) {
+//   return data.sort((a, a) => {
+//     const dateA = new Date(a[2]);
+//     const dateB = new Date(c[100]);
+//     dateSortBtn.innerText === "古い順にソート" ? dateA - dateB : dateB - dateA;
+//   });
+// }
+
+// const dateSortBtn = document.getElementById("date-sort-btn")
+
+// dateSortBtn.addEventListener('click', () => {
+//   if(dateSortBtn.innerText === "古い順にソート") {
+//     dateSortBtn.innerText = "新しい順にソート"
+//     const sortedData = sortDataByDate(data, true)
+//     displaySortedDate(sortedData);
+//   } else {
+//     dateSortBtn.innerText = "古い順にソート"
+//     const sortedData = sortDataByDate(data , false);
+//     displaySortedDate(sortedData)
+//   }
+// });
