@@ -67,17 +67,19 @@ function maybeEnableButtons() {
 const authorizeBtn = document.getElementById('authorize-btn');
 
 authorizeBtn.addEventListener('click', () => {
-  tokenClient.callback = async (resp) => { //respとはresponseの略。APIリクエストの応答や結果
-    if (resp.error !== undefined) {
-      throw (resp); //エラーを投げる。
-    }
-    document.getElementById('signout-btn').style.visibility = 'visible'; //サインアウトボタンを出現
-    authorizeBtn.innerText = 'Refresh'; //認証（Authorize）ボタンの文字をRefreshに変更。
-    // sortByNewDateの完了を待つ。
-      await sortByNewDate();
-  };
-  if(authorizeBtn.innerText === 'Refresh') {
-    window.location.reload();
+  if(authorizeBtn.innerText === 'Authorize') {
+    tokenClient.callback = async (resp) => { //respとはresponseの略。APIリクエストの応答や結果
+      if (resp.error !== undefined) {
+        throw (resp); //エラーを投げる。
+      }
+      document.getElementById('signout-btn').style.visibility = 'visible'; //サインアウトボタンを出現
+      authorizeBtn.innerText = 'Refresh'; //認証（Authorize）ボタンの文字をRefreshに変更。
+      // sortByNewDateの完了を待つ。
+        await sortByNewDate();
+    };
+  } else {
+     tableBody.innerHTML ='';
+     sortByNewDate();
   }
 
   //新しいセッションの場合は、ユーザーに対してアカウント選択と同意を求め、既存のセッションの場合はこれをスキップして、アクセストークンを取得する。
@@ -113,75 +115,9 @@ signOutBtn.addEventListener('click', () => {
 //  * スプレッドシート
 //  * リンク先はこちら → https://docs.google.com/spreadsheets/d/1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI/edit
 //  */
-// 古い順にソートする関数
-async function sortByOldDate() {
-  let response;
-  try {
-    // スプレッドシートのデータ取得
-    response = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',// ExcelID
-      range: 'master!A2:C100',// 範囲指定
-    });
-  } catch (err) {
-    document.getElementById('error-view').innerText = err.message;
-    return;
-  }
-  const range = response.result;
-  // 取得したデータ結果がない、データの値が存在しない、データの範囲が０の場合、エラーメッセージを返す。
-  if (!range || !range.values || range.values.length == 0) {
-    document.getElementById('error-view').innerText = 'No values found.';
-    return;
-  }
-
-  const tableBody = document.getElementById('gapi-sheets');
-  tableBody.innerHTML ='';
-
-  for (let i = 0; i < range.values.length; i++) {
-    const date = range.values[i][0];
-    const name = range.values[i][1];
-    const content = range.values[i][2];
-    const newRow = document.createElement('tr');
-
-    const dateCell = document.createElement('td');
-    dateCell.className = 'border date';
-    dateCell.textContent = date;
-    dateCell.style.width = '5rem';
-    newRow.appendChild(dateCell);
-
-    const nameCell = document.createElement('td');
-    nameCell.className = 'border engineer-name';
-    nameCell.textContent = name;
-    nameCell.style.width = '5rem';
-    newRow.appendChild(nameCell);
-
-    const contentCell = document.createElement('td');
-    contentCell.className = 'border progress-content';
-    contentCell.textContent = content;
-    contentCell.style.width = '30rem';
-    newRow.appendChild(contentCell);
-
-    const editCell = document.createElement('td');
-    editCell.className = 'border';
-    const editIcon = document.createElement('i');
-    editIcon.className = 'material-icons';
-    editIcon.textContent = 'edit';
-    editCell.style.width = '5rem';
-    editCell.appendChild(editIcon);
-    newRow.appendChild(editCell);
-
-    const deleteCell = document.createElement('td');
-    deleteCell.className = 'border';
-    const deleteIcon = document.createElement('i');
-    deleteIcon.className = 'material-icons';
-    deleteIcon.textContent = 'delete';
-    deleteCell.style.width = '5rem';
-    deleteCell.appendChild(deleteIcon);
-    newRow.appendChild(deleteCell);
-    tableBody.appendChild(newRow);
-  }
-}
 
 // 新しい順番にソートする関数
+const tableBody = document.getElementById('gapi-sheets');
 async function sortByNewDate() {
   let response;
   try {
@@ -201,7 +137,6 @@ async function sortByNewDate() {
     return;
   }
 
-  const tableBody = document.getElementById('gapi-sheets');
   tableBody.innerHTML ='';
 
   for (let i = range.values.length - 1;i >= 0; i--) {
@@ -248,15 +183,3 @@ async function sortByNewDate() {
     tableBody.appendChild(newRow);
   }
 }
-
-const SortByDateBtn = document.getElementById("sort-by-date-btn")
-
-SortByDateBtn.addEventListener('click', () => {
-  if(SortByDateBtn.innerText === "Sort by old date") {
-    SortByDateBtn.innerText = "Sort by new date"
-    sortByOldDate();
-  } else {
-    SortByDateBtn.innerText = "Sort by old date"
-    sortByNewDate();
-  }
-});
