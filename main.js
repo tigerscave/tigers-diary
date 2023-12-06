@@ -73,8 +73,8 @@ authorizeBtn.addEventListener('click', () => {
     }
     document.getElementById('signout-btn').style.visibility = 'visible'; //サインアウトボタンを出現
     authorizeBtn.innerText = 'Refresh'; //認証（Authorize）ボタンの文字をRefreshに変更。
-    // showProgressReportの完了を待つ。
-      await showProgressReport();
+    // sortByNewDateの完了を待つ。
+      await sortByNewDate();
   };
   if(authorizeBtn.innerText === 'Refresh') {
     window.location.reload();
@@ -113,7 +113,8 @@ signOutBtn.addEventListener('click', () => {
 //  * スプレッドシート
 //  * リンク先はこちら → https://docs.google.com/spreadsheets/d/1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI/edit
 //  */
-async function showProgressReport() {
+// 古い順にソートする関数
+async function sortByOldDate() {
   let response;
   try {
     // スプレッドシートのデータ取得
@@ -133,6 +134,7 @@ async function showProgressReport() {
   }
 
   const tableBody = document.getElementById('gapi-sheets');
+  tableBody.innerHTML ='';
 
   for (let i = 0; i < range.values.length; i++) {
     const date = range.values[i][0];
@@ -143,16 +145,19 @@ async function showProgressReport() {
     const dateCell = document.createElement('td');
     dateCell.className = 'border date';
     dateCell.textContent = date;
+    dateCell.style.width = '5rem';
     newRow.appendChild(dateCell);
 
     const nameCell = document.createElement('td');
     nameCell.className = 'border engineer-name';
     nameCell.textContent = name;
+    nameCell.style.width = '5rem';
     newRow.appendChild(nameCell);
 
     const contentCell = document.createElement('td');
     contentCell.className = 'border progress-content';
     contentCell.textContent = content;
+    contentCell.style.width = '30rem';
     newRow.appendChild(contentCell);
 
     const editCell = document.createElement('td');
@@ -160,6 +165,7 @@ async function showProgressReport() {
     const editIcon = document.createElement('i');
     editIcon.className = 'material-icons';
     editIcon.textContent = 'edit';
+    editCell.style.width = '5rem';
     editCell.appendChild(editIcon);
     newRow.appendChild(editCell);
 
@@ -168,33 +174,89 @@ async function showProgressReport() {
     const deleteIcon = document.createElement('i');
     deleteIcon.className = 'material-icons';
     deleteIcon.textContent = 'delete';
+    deleteCell.style.width = '5rem';
     deleteCell.appendChild(deleteIcon);
     newRow.appendChild(deleteCell);
     tableBody.appendChild(newRow);
   }
 }
 
-// const spreadsheetId = '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI'
-// const dataRange = 'master!A2:C100'
-// const data = getSpreadsheetData(spreadsheetId, dataRange);
-// function sortDataByDate(data) {
-//   return data.sort((a, a) => {
-//     const dateA = new Date(a[2]);
-//     const dateB = new Date(c[100]);
-//     dateSortBtn.innerText === "古い順にソート" ? dateA - dateB : dateB - dateA;
-//   });
-// }
+// 新しい順番にソートする関数
+async function sortByNewDate() {
+  let response;
+  try {
+    // スプレッドシートのデータ取得
+    response = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',// ExcelID
+      range: 'master!A2:C100',// 範囲指定
+    });
+  } catch (err) {
+    document.getElementById('error-view').innerText = err.message;
+    return;
+  }
+  const range = response.result;
+  // 取得したデータ結果がない、データの値が存在しない、データの範囲が０の場合、エラーメッセージを返す。
+  if (!range || !range.values || range.values.length == 0) {
+    document.getElementById('error-view').innerText = 'No values found.';
+    return;
+  }
 
-// const dateSortBtn = document.getElementById("date-sort-btn")
+  const tableBody = document.getElementById('gapi-sheets');
+  tableBody.innerHTML ='';
 
-// dateSortBtn.addEventListener('click', () => {
-//   if(dateSortBtn.innerText === "古い順にソート") {
-//     dateSortBtn.innerText = "新しい順にソート"
-//     const sortedData = sortDataByDate(data, true)
-//     displaySortedDate(sortedData);
-//   } else {
-//     dateSortBtn.innerText = "古い順にソート"
-//     const sortedData = sortDataByDate(data , false);
-//     displaySortedDate(sortedData)
-//   }
-// });
+  for (let i = range.values.length - 1;i >= 0; i--) {
+    const date = range.values[i][0];
+    const name = range.values[i][1];
+    const content = range.values[i][2];
+    const newRow = document.createElement('tr');
+
+    const dateCell = document.createElement('td');
+    dateCell.className = 'border date';
+    dateCell.textContent = date;
+    dateCell.style.width = '5rem';
+    newRow.appendChild(dateCell);
+
+    const nameCell = document.createElement('td');
+    nameCell.className = 'border engineer-name';
+    nameCell.textContent = name;
+    nameCell.style.width = '5rem';
+    newRow.appendChild(nameCell);
+
+    const contentCell = document.createElement('td');
+    contentCell.className = 'border progress-content';
+    contentCell.textContent = content;
+    contentCell.style.width = '30rem';
+    newRow.appendChild(contentCell);
+
+    const editCell = document.createElement('td');
+    editCell.className = 'border';
+    const editIcon = document.createElement('i');
+    editIcon.className = 'material-icons';
+    editIcon.textContent = 'edit';
+    editCell.style.width = '5rem';
+    editCell.appendChild(editIcon);
+    newRow.appendChild(editCell);
+
+    const deleteCell = document.createElement('td');
+    deleteCell.className = 'border';
+    const deleteIcon = document.createElement('i');
+    deleteIcon.className = 'material-icons';
+    deleteIcon.textContent = 'delete';
+    deleteCell.style.width = '5rem';
+    deleteCell.appendChild(deleteIcon);
+    newRow.appendChild(deleteCell);
+    tableBody.appendChild(newRow);
+  }
+}
+
+const SortByDateBtn = document.getElementById("sort-by-date-btn")
+
+SortByDateBtn.addEventListener('click', () => {
+  if(SortByDateBtn.innerText === "Sort by old date") {
+    SortByDateBtn.innerText = "Sort by new date"
+    sortByOldDate();
+  } else {
+    SortByDateBtn.innerText = "Sort by old date"
+    sortByNewDate();
+  }
+});
