@@ -15,6 +15,26 @@
   <button id="authorize-btn"
     class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Authorize</button>
   <button id="signout-btn" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Sign Out</button>
+  <!--日記を追記する箇所（暫定）-->
+  <div class="flex mt-3">
+    <label for="name-select" class="mr-3">name:</label>
+    <select name="all-writer" id="writer" class="p-1 border border-black appearance-none">
+      <option value="" >--Choose your name--</option>
+      <option value="ada">Ada</option>
+      <option value="rah">Rah</option>
+      <option value="falcon">Falcon</option>
+      <option value="eight">Eight</option>
+      <option value="jigen">Jigen</option>
+    </select>
+  </div>
+  <div class="flex mt-2">
+    <div>diary:</div>
+    <input id="diary-content" type="text" class="border border-black ml-4  w-6/12">
+  </div>
+  <div class="flex mt-2">
+    <button id="post-btn" class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4">Post</button>
+    <div id="post-message" class="hidden mt-5 ml-3">posted!</div>
+  </div>
   <!--TopページとCreateページの切り替え-->
   <div class="flex mt-8">
     <div class="flex flex-col mr-6">
@@ -24,7 +44,7 @@
     </div>
     <!--Topページ-->
     <div id="top-page">
-      <table class="border">
+      <table class="border" id="gapi-sheets-items">
         <tr class="border">
           <th class="border w-20">Date</th>
           <th class="border w-20">Name</th>
@@ -39,9 +59,9 @@
   <!--データ取得失敗時、ここにエラーメッセージが出る。-->
   <pre id="error-view" class="white-space-pre-wrap"></pre>
 
+  <script src="./main.js"></script>
   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
   <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
-  <script src="main.js"></script>
 </body>
 
 </html>
