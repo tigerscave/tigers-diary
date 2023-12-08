@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <title>Tigers Diary Create Page</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -19,9 +20,12 @@
       <a class="create-btn bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Create</a>
     </div>
     <div id="create-page" class="mt-3 mb-2">
+      <div class="flex mt-2">
+        <div>date:</div>
+        <input type="text" class="border border-black ml-4">
+      </div>
       <label for="name-select">name:</label>
-
-      <select name="engineers" id="engineers" class="p-1">
+      <select name="all-writer" id="all-writer" class="p-1">
         <option value="">--Choose your name--</option>
         <option value="ada">Ada</option>
         <option value="rah">Rah</option>
@@ -45,10 +49,10 @@
   <!--データ取得失敗時、ここにエラーメッセージが出る。-->
   <pre id="error-view" class="white-space-pre-wrap"></pre>
 
+  <script src="../main.js"></script>
+  <script src="./main.js"></script>
   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
   <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
-  <script src="../main.js"></script>
-  <script src="main.js"></script>
 </body>
 
 </html>
