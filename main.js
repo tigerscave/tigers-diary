@@ -203,18 +203,10 @@ async function sortByNewDate() {
   }
 }
 
-const postBtn = document.getElementById('post-btn')
-const postMessage = document.getElementById('post-message')
-
-// スプレッドシートへの書き込みが完了した後にデータを取得。async/awaitを使用。
-postBtn.addEventListener('click',async () => {
-  // 選択された名前の情報を参照する。
-  const writerElement = document.getElementById("writer")
-  const writer = writerElement.value
-  await appendDiary();
-  tableBody.innerHTML = '';
-  await sortByNewDate();
-});
+function containsNgWord(content, ngWords) {
+  const sanitizedContent = content.toLowerCase(); // 小文字に変換して比較
+  return ngWords.some(ngWord => sanitizedContent.includes(ngWord));
+}
 
 // 日記を追記する関数
 async function appendDiary(spreadsheetId, range, valueInputOption, _values, callback) {
@@ -222,7 +214,7 @@ async function appendDiary(spreadsheetId, range, valueInputOption, _values, call
   const today = new Date();
   const month = today.getMonth() + 1;
   const day = today.getDate();
-  
+
   // 名前の情報を取得
   const writerElement = document.getElementById("writer")
   const writer = writerElement.value
@@ -239,6 +231,12 @@ async function appendDiary(spreadsheetId, range, valueInputOption, _values, call
   };
   let response;
   try {
+    const ngWords = ['クソ', 'くそ', 'kuso', 'kasu', '無理', 'かす', 'むり', 'できない', 'うんち', 'fuck', '失敗', 'ごみ', 'ゴミ', 'つかえない', '使えない','だめ','ダメ','没','ボツ'];
+    if (containsNgWord(diaryContent, ngWords)) {
+      alert('Great job!Could you please express your thoughs using positive words?Thank you!');
+      console.log('NGワードが含まれているため、投稿できません。');
+      return;
+    }
     response = await gapi.client.sheets.spreadsheets.values.append({
       spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
       range: 'master!A18:C18',
@@ -255,3 +253,19 @@ async function appendDiary(spreadsheetId, range, valueInputOption, _values, call
     return;
   }
 }
+
+const postBtn = document.getElementById('post-btn')
+const postMessage = document.getElementById('post-message')
+
+// スプレッドシートへの書き込みが完了した後にデータを取得。async/awaitを使用。
+postBtn.addEventListener('click', async () => {
+  // 選択された名前の情報を参照する。
+  const writerElement = document.getElementById("writer")
+  const writer = writerElement.value
+  await appendDiary();
+  tableBody.innerHTML = '';
+  await sortByNewDate();
+  const diaryContentElement = document.getElementById('diary-content')
+  diaryContentElement.value = '';
+  writerElement.value = '';
+});
