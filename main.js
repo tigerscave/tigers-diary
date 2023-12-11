@@ -269,3 +269,49 @@ postBtn.addEventListener('click', async () => {
   diaryContentElement.value = '';
   writerElement.value = '';
 });
+
+// /**
+//  * 日記を削除する関数
+//  */
+
+async function deleteLastDiary() {
+  let response;
+  try {
+    response = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId:'1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
+      range: 'master!A2:C100'
+    });
+  } catch (err) {
+    errorView.innerText = err.message;
+    return;
+  }
+
+  const range = response.result;
+  if(!range || !range.values || range.values.length == 0) {
+    errorView.innerText = 'No values found';
+    return;
+  }
+  // 日記の最新の要素
+  const lastIndex = range.values.length - 1;
+
+  try {
+    // 最新の日記を削除する
+    await gapi.client.sheets.spreadsheets.values.clear({
+      spreadsheetId:'1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
+      range: `master!A${lastIndex + 2}:C${lastIndex + 2}`,
+    });
+    // 日記一覧を表示する
+    await sortByNewDate();
+  } catch(err) {
+    console.error('Error');
+  }
+}
+
+const deleteBtn = document.getElementById('delete-btn')
+
+deleteBtn.addEventListener('click',()=> {
+  const confirmation = confirm('Are you sure?');
+  if(confirmation){
+    deleteLastDiary();
+  } 
+});
