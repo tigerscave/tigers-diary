@@ -156,7 +156,7 @@ async function sortByNewDate() {
   } else {
     filteredData = response.result.values;
   }
-  
+  // エラー処理
   if (!filteredData || !filteredData || filteredData.length == 0) {
     errorView.innerText = 'No values found.';
     return;
@@ -334,4 +334,12 @@ const FilterByNameBtn = document.getElementById("filter-by-name-btn")
 
 FilterByNameBtn.addEventListener('click', () => {
   sortByNewDate();
+});
+
+// 名前選択後、textareaに自動的にカーソルが当たる
+const selectedName = document.getElementById('writer');
+const diaryContentElement = document.getElementById('diary-content')
+
+selectedName.addEventListener('change',() => {
+  diaryContentElement.focus();
 });

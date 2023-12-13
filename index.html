@@ -16,12 +16,14 @@
   <!--サインイン、サインアウトのボタン-->
   <button id="authorize-btn"
     class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md ml-2">Authorize</button>
-  <button id="signout-btn" class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md ml-2">Sign Out</button>
+  <button id="signout-btn"
+    class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md ml-2">Sign
+    Out</button>
   <!--日記を追記する箇所（暫定）-->
   <div class="flex mt-3">
-    <label for="name-select" class="mr-3">name:</label>
+    <label for="name-select" class="mr-3 ml-2">Name</label>
     <select name="all-writer" id="writer" class="p-1 border border-black appearance-none">
-      <option value="" >--Choose your name--</option>
+      <option value="">--Choose your name--</option>
       <option value="Ada">Ada</option>
       <option value="Raha">Raha</option>
       <option value="Falcon">Falcon</option>
@@ -30,34 +32,32 @@
     </select>
   </div>
   <div class="flex mt-2">
-    <div>diary:</div>
+    <div class="ml-2">Diary</div>
     <input id="diary-content" type="text" class="border border-black ml-4  w-6/12">
   </div>
   <div class="flex mt-2">
-    <button id="post-btn" class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Post</button>
-    <button id="delete-btn" class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Delete the latest one</button>
-    <button id="filter-by-name-btn" class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Filter by name</button>
+    <button id="post-btn"
+      class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Post</button>
+    <button id="delete-btn"
+      class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Delete
+      the latest one</button>
+    <button id="filter-by-name-btn"
+      class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Filter
+      by name</button>
   </div>
-  <!--TopページとCreateページの切り替え-->
-  <div class="flex mt-8">
-    <div class="flex flex-col mr-6">
-      <a class="create-btn bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Top</a>
-      <a href="/create-diary/index.html" id="create-btn"
-        class="create-btn bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md">Create</a>
-    </div>
-    <!--Topページ-->
-    <div id="top-page">
-      <table class="border" id="gapi-sheets-items">
-        <tr class="border">
-          <th class="border w-20">Date</th>
-          <th class="border w-20">Name</th>
-          <th class="border w-96">Diary</th>
-          <th class="border w-20">Edit</th>
-          <th class="border w-20">Delete</th>
-        </tr>
-      </table>
-      <table class="border" id="gapi-sheets"></table>
-    </div>
+  <!--Topページ-->
+  <div id="top-page" class="mt-4 ml-5">
+    <table class="border" id="gapi-sheets-items">
+      <tr class="border">
+        <th class="border w-20">Date</th>
+        <th class="border w-20">Name</th>
+        <th class="border w-96">Diary</th>
+        <th class="border w-20">Edit</th>
+        <th class="border w-20">Delete</th>
+      </tr>
+    </table>
+    <table class="border" id="gapi-sheets"></table>
+  </div>
   </div>
   <!--データ取得失敗時、ここにエラーメッセージが出る。-->
   <pre id="error-view" class="white-space-pre-wrap"></pre>
