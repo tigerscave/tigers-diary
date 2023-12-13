@@ -152,7 +152,7 @@ async function sortByNewDate() {
 
   if (selectedName) {
     filteredData = response.result.values.filter(row => row[1] === selectedName)
-    // 名前が選択されていなかったら、全ての値を代入する。
+    // 名前が選択されていなかったら、全てのスプレッドシートの値を代入する。
   } else {
     filteredData = response.result.values;
   }
@@ -183,7 +183,6 @@ async function sortByNewDate() {
     nameCell.textContent = name;
     nameCell.style.width = '5rem';
     newRow.appendChild(nameCell);
-
 
     // 日記内容の処理
     const contentCell = document.createElement('td');
@@ -220,7 +219,9 @@ function containsNgWord(content, ngWords) {
   return ngWords.some(ngWord => sanitizedContent.includes(ngWord));
 }
 
-// 日記を投稿する関数
+// /**
+//  * 日記を投稿する関数
+//  */
 async function appendDiary(spreadsheetId, range, valueInputOption, _values, callback) {
   // 日時の情報を取得
   const today = new Date();
@@ -286,7 +287,6 @@ postBtn.addEventListener('click', async () => {
 // /**
 //  * 日記を削除する関数
 //  */
-
 async function deleteLastDiary() {
   let response;
   try {
@@ -329,6 +329,7 @@ deleteBtn.addEventListener('click', () => {
   }
 });
 
+// 日記をフィルタリングするボタン
 const FilterByNameBtn = document.getElementById("filter-by-name-btn")
 
 FilterByNameBtn.addEventListener('click', () => {
