@@ -89,33 +89,28 @@ async function sortByNewDate() {
     deleteCell.appendChild(deleteIcon);
     // クリックイベントに対してクロージャを使用して、iの値を保存
     deleteIcon.addEventListener('click', (function (index) {
-      return async function () {
-        console.log('削除アイコンがクリックされました。インデックス:', index + 2);
-        // ここで削除アクションを処理
-        try {
-          response = await gapi.client.sheets.spreadsheets.values.clear({
-            spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
-            range:`master!A${index + 2}:C${index + 2}`,
-          });
-        } catch (err) {
-          console.error('Error')
+      return function () {
+        const confirmation = confirm('Are you sure?');
+        if (confirmation) {
+          deleteDiary(index);
         }
       };
     })(i));
-    newRow.appendChild(deleteCell);   
+    newRow.appendChild(deleteCell);
     tableBody.appendChild(newRow); // 新しく行を追加する。
   }
 }
 
+
+// /**
+//  ******************************************************日記を投稿する関数**************************************************************
+//  */
 
 function containsNgWord(content, ngWords) {
   const sanitizedContent = content.toLowerCase(); // 小文字に変換して比較
   return ngWords.some(ngWord => sanitizedContent.includes(ngWord));
 }
 
-// /**
-//  ******************************************************日記を投稿する関数**************************************************************
-//  */
 async function appendDiary(spreadsheetId, range, valueInputOption, _values, callback) {
   // 日時の情報を取得
   const today = new Date();
@@ -161,10 +156,9 @@ async function appendDiary(spreadsheetId, range, valueInputOption, _values, call
   }
 }
 
-const postBtn = document.getElementById('post-btn')
-const postMessage = document.getElementById('post-message')
-
 // スプレッドシートへの書き込みが完了した後にデータを取得。async/awaitを使用。
+const postBtn = document.getElementById('post-btn')
+
 postBtn.addEventListener('click', async () => {
   // 選択された名前の情報を参照する。
   const writerElement = document.getElementById("writer")
@@ -181,42 +175,23 @@ postBtn.addEventListener('click', async () => {
 // /**
 //  ********************************************** 日記を削除する関数*********************************************************
 //  */
-async function deleteLastDiary() {
+async function deleteDiary(index) {
   let response;
+  console.log('削除アイコンがクリックされました。インデックス:', index + 2);
+  // ここで削除アクションを処理
   try {
-    response = await gapi.client.sheets.spreadsheets.values.get({
+    response = await gapi.client.sheets.spreadsheets.values.clear({
       spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
-      range: 'master!A2:C100'
+      range: `master!A${index + 2}:C${index + 2}`,
     });
+    console.log('削除アクションが完了しました。');
+    console.log(response);
+    await sortByNewDate(); // sortByNewDate を呼び出して再描画
+    console.log('sortByNewDate が呼び出されました。');
   } catch (err) {
-    errorView.innerText = err.message;
-    return;
-  }
-
-  const range = response.result;
-  // 日記の最新の要素
-  const lastIndex = range.values.length - 1;
-  try {
-    // 最新の日記を削除する
-    await gapi.client.sheets.spreadsheets.values.clear({
-      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
-      range: `master!A${lastIndex + 2}:C${lastIndex + 2}`,
-    });
-    // 日記一覧を表示する
-    await sortByNewDate();
-  } catch (err) {
-    console.error('Error');
+    console.error('Error:', err);
   }
 }
-
-const deleteBtn = document.getElementById('delete-btn')
-
-deleteBtn.addEventListener('click', () => {
-  const confirmation = confirm('Are you sure?');
-  if (confirmation) {
-    deleteLastDiary();
-  }
-});
 
 // 日記をフィルタリングするボタン
 const FilterByNameBtn = document.getElementById("filter-by-name-btn")
