@@ -22,7 +22,6 @@ async function sortByNewDate() {
     errorView.innerText = err.message;
     return;
   }
-console.log(response);
   // 名前が選択されていたら、フィルタリングを行う。
   let filteredData;
   const selectedName = document.getElementById('writer').value;
@@ -88,26 +87,24 @@ console.log(response);
     deleteCell.style.width = '5rem';
     deleteCell.classList.add('cursor-pointer');
     deleteCell.appendChild(deleteIcon);
-    newRow.appendChild(deleteCell);
-
+    // クリックイベントに対してクロージャを使用して、iの値を保存
+    deleteIcon.addEventListener('click', (function (index) {
+      return async function () {
+        console.log('削除アイコンがクリックされました。インデックス:', index + 2);
+        // ここで削除アクションを処理
+        try {
+          response = await gapi.client.sheets.spreadsheets.values.clear({
+            spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
+            range:`master!A${index + 2}:C${index + 2}`,
+          });
+        } catch (err) {
+          console.error('Error')
+        }
+      };
+    })(i));
+    newRow.appendChild(deleteCell);   
     tableBody.appendChild(newRow); // 新しく行を追加する。
   }
-
-//  // I am trying deleteBtn
-//   const deleteIconElements = document.getElementsByTagName('i');
-//   const selectedDeleteIcon = deleteIconElements[i][4];
-//   selectedDeleteIcon.addEventListener('click',async()=>{
-//     console.log("good!");
-//     try {
-//       await gapi.client.sheets.spreadsheets.values.clear({
-//         spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
-//         range:`master!A${i + 1}:C${i + 1}`,
-//       });
-//       await sortByNewDate();
-//     } catch (err) {
-//       console.error('Error')
-//     }
-//   });
 }
 
 
@@ -197,10 +194,6 @@ async function deleteLastDiary() {
   }
 
   const range = response.result;
-  if (!range || !range.values || range.values.length == 0) {
-    errorView.innerText = 'No values found';
-    return;
-  }
   // 日記の最新の要素
   const lastIndex = range.values.length - 1;
   try {
@@ -236,6 +229,6 @@ FilterByNameBtn.addEventListener('click', () => {
 const selectedName = document.getElementById('writer');
 const diaryContentElement = document.getElementById('diary-content')
 
-selectedName.addEventListener('change',() => {
+selectedName.addEventListener('change', () => {
   diaryContentElement.focus();
 });
