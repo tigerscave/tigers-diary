@@ -173,19 +173,7 @@ postBtn.addEventListener('click', async () => {
 //  ********************************************** 日記を削除する関数*********************************************************
 //  */
 async function deleteDiary(index) {
-  let response;
-  console.log('削除アイコンがクリックされました。インデックス:', index + 2);
-  // ここで削除アクションを処理（記述された内容を削除できるが、Googleスプレッドシートの行を削除まではできない）
-  try {
-    response = await gapi.client.sheets.spreadsheets.values.clear({
-      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
-      range: `master!A${index + 2}:E${index + 2}`,
-    });
-    console.log('Googleスプレッドシートの、削除アクションが完了しました。');
-  } catch (err) {
-    console.error('Error:', err);
-  }
-  // Googleスプレッドシートの空白の行を削除する。真ん中の行を削除した際は、詰める。
+  // Googleスプレッドシートの行を削除する。真ん中の行を削除した際は、詰める。
   await gapi.client.sheets.spreadsheets.batchUpdate({
     spreadsheetId:'1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
     resource: {
