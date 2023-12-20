@@ -15,8 +15,8 @@ async function sortByNewDate() {
   try {
     // スプレッドシートのデータ取得
     response = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',// ExcelID
-      range: 'master!A2:C100',// 範囲指定
+      spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',// スプレッドシートID
+      range: 'master!A2:E100',// 範囲指定
     });
   } catch (err) {
     errorView.innerText = err.message;
@@ -24,16 +24,17 @@ async function sortByNewDate() {
   }
   // 名前が選択されていたら、フィルタリングを行う。
   let filteredData;
-  const selectedName = document.getElementById('writer').value;
+  const selectedName = document.getElementById('writer').value; // 名前が選択されている。
 
   if (selectedName) {
+    // 名前が選択されていたら、Nameの列にselectedNameを入力する。
     filteredData = response.result.values.filter(row => row[1] === selectedName)
-    // 名前が選択されていなかったら、全てのスプレッドシートの値を代入する。
   } else {
+    // 名前が選択されていなかったら、全てのスプレッドシートの値を代入する。
     filteredData = response.result.values;
   }
   // エラー処理
-  if (!filteredData || !filteredData || filteredData.length == 0) {
+  if (!filteredData || filteredData.length == 0) {
     errorView.innerText = 'No values found.';
     return;
   }
@@ -48,28 +49,28 @@ async function sortByNewDate() {
 
     // 日付の処理
     const dateCell = document.createElement('td');
-    dateCell.className = 'border date';
+    dateCell.className = 'border date text-center';
     dateCell.textContent = date;
     dateCell.style.width = '5rem';
     newRow.appendChild(dateCell);
 
     // 名前の処理
     const nameCell = document.createElement('td');
-    nameCell.className = 'border writer';
+    nameCell.className = 'border writer text-center';
     nameCell.textContent = name;
     nameCell.style.width = '5rem';
     newRow.appendChild(nameCell);
 
     // 日記内容の処理
     const contentCell = document.createElement('td');
-    contentCell.className = 'border progress-content';
+    contentCell.className = 'border';
     contentCell.textContent = content;
     contentCell.style.width = '30rem';
     newRow.appendChild(contentCell);
 
     // 編集アイコンの処理
     const editCell = document.createElement('td');
-    editCell.className = 'border';
+    editCell.className = 'border text-center';
     const editIcon = document.createElement('i');
     editIcon.className = 'material-icons';
     editIcon.textContent = 'edit';
@@ -80,7 +81,7 @@ async function sortByNewDate() {
 
     // 削除アイコンの処理
     const deleteCell = document.createElement('td');
-    deleteCell.className = 'border';
+    deleteCell.className = 'border text-center';
     const deleteIcon = document.createElement('i');
     deleteIcon.className = 'material-icons';
     deleteIcon.textContent = 'delete';
@@ -101,15 +102,9 @@ async function sortByNewDate() {
   }
 }
 
-
 // /**
 //  ******************************************************日記を投稿する関数**************************************************************
 //  */
-
-function containsNgWord(content, ngWords) {
-  const sanitizedContent = content.toLowerCase(); // 小文字に変換して比較
-  return ngWords.some(ngWord => sanitizedContent.includes(ngWord));
-}
 
 async function appendDiary(spreadsheetId, range, valueInputOption, _values, callback) {
   // 日時の情報を取得
@@ -125,23 +120,25 @@ async function appendDiary(spreadsheetId, range, valueInputOption, _values, call
   const diaryContentElement = document.getElementById('diary-content')
   const diaryContent = diaryContentElement.value
 
+  // A列(月日)、B列(名前)、C列(内容)、D列(edit文字)、E列(delete文字)を挿入
   let values = [
-    [`${month}/${day}`, writer, diaryContent]
+    [`${month}/${day}`, writer, diaryContent,"edit","delete"]
   ];
   const body = {
     values: values,
   };
   let response;
   try {
+    // 日記を投稿する際に、使ってはいけないNGワード。使うと、アラートが出て、やり直しになる。
     const ngWords = ['クソ', 'くそ', 'kuso', 'kasu', '無理', 'かす', 'むり', 'できない', 'うんち', 'fuck', '失敗', 'ごみ', 'ゴミ', 'つかえない', '使えない', 'だめ', 'ダメ', '没', 'ボツ'];
-    if (containsNgWord(diaryContent, ngWords)) {
+    if (ngWords.some(word => diaryContent.includes(word))) {
       alert('You did good job.Could you please express your thoughs using positive words?Thank you.');
       console.log('NGワードが含まれているため、投稿できません。');
       return;
     }
     response = await gapi.client.sheets.spreadsheets.values.append({
       spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
-      range: 'master!A18:C18',
+      range: 'master!A18:E18',
       // 追記にはvalueInputOptionパラメータを使用する。
       valueInputOption: 'RAW',
       resource: body,
@@ -178,19 +175,36 @@ postBtn.addEventListener('click', async () => {
 async function deleteDiary(index) {
   let response;
   console.log('削除アイコンがクリックされました。インデックス:', index + 2);
-  // ここで削除アクションを処理
+  // ここで削除アクションを処理（記述された内容を削除できるが、Googleスプレッドシートの行を削除まではできない）
   try {
     response = await gapi.client.sheets.spreadsheets.values.clear({
       spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
-      range: `master!A${index + 2}:C${index + 2}`,
+      range: `master!A${index + 2}:E${index + 2}`,
     });
-    console.log('削除アクションが完了しました。');
-    console.log(response);
-    await sortByNewDate(); // sortByNewDate を呼び出して再描画
-    console.log('sortByNewDate が呼び出されました。');
+    console.log('Googleスプレッドシートの、削除アクションが完了しました。');
   } catch (err) {
     console.error('Error:', err);
   }
+  // Googleスプレッドシートの空白の行を削除する。真ん中の行を削除した際は、詰める。
+  await gapi.client.sheets.spreadsheets.batchUpdate({
+    spreadsheetId:'1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
+    resource: {
+      requests: [
+        {
+          deleteDimension: {
+            range: {
+              sheetId: 0,
+              dimension: 'ROWS',
+              startIndex: index + 1, // 削除する行の開始インデックス
+              endIndex: index + 2, // 削除する行の終了インデックス(+1行)
+            },
+          },
+        },
+      ],
+    },
+  });
+  await sortByNewDate(); // sortByNewDate を呼び出して再描画
+  console.log('sortByNewDate が呼び出されました。');
 }
 
 // 日記をフィルタリングするボタン
