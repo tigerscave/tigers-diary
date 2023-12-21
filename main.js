@@ -49,43 +49,38 @@ async function sortByNewDate() {
 
     // 日付の処理
     const dateCell = document.createElement('td');
-    dateCell.className = 'border date text-center';
+    dateCell.className = 'border date text-center w-[5rem]';
     dateCell.textContent = date;
-    dateCell.style.width = '5rem';
     newRow.appendChild(dateCell);
 
     // 名前の処理
     const nameCell = document.createElement('td');
-    nameCell.className = 'border writer text-center';
+    nameCell.className = 'border writer text-center w-[5rem]';
     nameCell.textContent = name;
-    nameCell.style.width = '5rem';
     newRow.appendChild(nameCell);
 
     // 日記内容の処理
     const contentCell = document.createElement('td');
-    contentCell.className = 'border  w-[45rem]';
+    contentCell.className = 'border w-[45rem]';
     contentCell.textContent = content;
-    // contentCell.style.width = '30rem';
     newRow.appendChild(contentCell);
 
     // 編集アイコンの処理
     const editCell = document.createElement('td');
-    editCell.className = 'border text-center';
+    editCell.className = 'border text-center w-[5rem]';
     const editIcon = document.createElement('i');
     editIcon.className = 'material-icons';
     editIcon.textContent = 'edit';
-    editCell.style.width = '5rem';
     editCell.classList.add('cursor-pointer');
     editCell.appendChild(editIcon);
     newRow.appendChild(editCell);
 
     // 削除アイコンの処理
     const deleteCell = document.createElement('td');
-    deleteCell.className = 'border text-center';
+    deleteCell.className = 'border text-center w-[5rem]';
     const deleteIcon = document.createElement('i');
     deleteIcon.className = 'material-icons';
     deleteIcon.textContent = 'delete';
-    deleteCell.style.width = '5rem';
     deleteCell.classList.add('cursor-pointer');
     deleteCell.appendChild(deleteIcon);
     // クリックイベントに対してクロージャを使用して、iの値を保存

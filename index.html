@@ -13,13 +13,13 @@
     <div class="ml-3 text-xl">Tigers Diary</div>
     <div class="ml-5 text-xl">v1.1.0</div>
   </div>
-  <!--サインイン、サインアウトのボタン-->
+  <!--Authorize、Sign Outのボタン-->
   <button id="authorize-btn"
     class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md ml-2">Authorize</button>
   <button id="signout-btn"
     class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md ml-2">Sign
     Out</button>
-  <!--日記を追記する箇所（暫定）-->
+  <!--日記投稿で使用。名前と日記の内容を記述→Postボタンで投稿。Filter by nameボタンで名前のフィルタリング。-->
   <div class="flex mt-3">
     <label for="name-select" class="mr-3 ml-2">Name</label>
     <select name="all-writer" id="writer" class="p-1 border border-black appearance-none cursor-pointer">
@@ -37,12 +37,12 @@
   </div>
   <div class="flex mt-2">
     <button id="post-btn"
-      class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Post</button>
+      class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8" disable>Post</button>
     <button id="filter-by-name-btn"
       class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Filter
       by name</button>
   </div>
-  <!--Topページ-->
+  <!--以下のHTMLに、日記が表示される。-->
   <div id="top-page" class="mt-4 ml-5">
     <table class="border" id="gapi-sheets-items">
       <tr class="border">
