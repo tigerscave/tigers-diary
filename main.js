@@ -63,9 +63,9 @@ async function sortByNewDate() {
 
     // 日記内容の処理
     const contentCell = document.createElement('td');
-    contentCell.className = 'border';
+    contentCell.className = 'border  w-[45rem]';
     contentCell.textContent = content;
-    contentCell.style.width = '30rem';
+    // contentCell.style.width = '30rem';
     newRow.appendChild(contentCell);
 
     // 編集アイコンの処理
