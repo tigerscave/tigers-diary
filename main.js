@@ -1,4 +1,5 @@
 'use strict';
+console.log("hoge")
 
 // *************************************** Google Sheets API **************************************************
 //  * スプレッドシート
@@ -7,7 +8,6 @@
 
 // スプレッドシート表出に必要な定義
 const tableBody = document.getElementById('gapi-sheets');
-const errorView = document.getElementById('error-view');
 
 // ***********************************日時の新しい順番にソートする関数***********************************************
 async function sortByNewDate() {
@@ -19,7 +19,7 @@ async function sortByNewDate() {
       range: 'master!A2:E100',// 範囲指定
     });
   } catch (err) {
-    errorView.innerText = err.message;
+    console.error('failed to get the data...');
     return;
   }
   // 名前が選択されていたら、フィルタリングを行う。
@@ -35,7 +35,7 @@ async function sortByNewDate() {
   }
   // エラー処理
   if (!filteredData || filteredData.length == 0) {
-    errorView.innerText = 'No values found.';
+    console.error('error');
     return;
   }
 
@@ -49,54 +49,65 @@ async function sortByNewDate() {
 
     // 日付の処理
     const dateCell = document.createElement('td');
-    dateCell.className = 'border date text-center';
+    dateCell.className = 'border date text-center w-[5rem]';
     dateCell.textContent = date;
-    dateCell.style.width = '5rem';
     newRow.appendChild(dateCell);
 
     // 名前の処理
     const nameCell = document.createElement('td');
-    nameCell.className = 'border writer text-center';
+    nameCell.className = 'border writer text-center w-[5rem]';
     nameCell.textContent = name;
-    nameCell.style.width = '5rem';
     newRow.appendChild(nameCell);
 
     // 日記内容の処理
     const contentCell = document.createElement('td');
-    contentCell.className = 'border  w-[45rem]';
+    contentCell.className = 'border w-[45rem]';
     contentCell.textContent = content;
-    // contentCell.style.width = '30rem';
     newRow.appendChild(contentCell);
 
     // 編集アイコンの処理
     const editCell = document.createElement('td');
-    editCell.className = 'border text-center';
+    editCell.className = 'border text-center w-[5rem]';
     const editIcon = document.createElement('i');
-    editIcon.className = 'material-icons';
+    editIcon.className = 'material-icons active:translate-y-2';
     editIcon.textContent = 'edit';
-    editCell.style.width = '5rem';
     editCell.classList.add('cursor-pointer');
+    if(selectedName) {
+      editIcon.classList.add('disabled');
+    }
     editCell.appendChild(editIcon);
+    // editIconがクリックされたときの処理
+    editIcon.addEventListener('click', () => {
+      if(!selectedName) {
+        modal.classList.remove('hidden');
+        const editContentElement = document.getElementById('edit-content');
+        editContentElement.value = content;
+        saveEditBtn.setAttribute('data-index', i);
+        editContentElement.focus();
+      }
+    });
     newRow.appendChild(editCell);
 
     // 削除アイコンの処理
     const deleteCell = document.createElement('td');
-    deleteCell.className = 'border text-center';
+    deleteCell.className = 'border text-center w-[5rem]';
     const deleteIcon = document.createElement('i');
-    deleteIcon.className = 'material-icons';
+    deleteIcon.className = 'material-icons active:translate-y-2';
     deleteIcon.textContent = 'delete';
-    deleteCell.style.width = '5rem';
     deleteCell.classList.add('cursor-pointer');
+    if(selectedName) {
+      deleteIcon.classList.add('disabled');
+    }
     deleteCell.appendChild(deleteIcon);
-    // クリックイベントに対してクロージャを使用して、iの値を保存
-    deleteIcon.addEventListener('click', (function (index) {
-      return function () {
+    // deleteIconがクリックされたときの処理
+    deleteIcon.addEventListener('click', () => {
+      if(!selectedName) {
         const confirmation = confirm('Are you sure?');
         if (confirmation) {
-          deleteDiary(index);
+          deleteDiary(i);
         }
-      };
-    })(i));
+      }
+    });
     newRow.appendChild(deleteCell);
     tableBody.appendChild(newRow); // 新しく行を追加する。
   }
@@ -107,6 +118,7 @@ const FilterByNameBtn = document.getElementById("filter-by-name-btn")
 
 FilterByNameBtn.addEventListener('click', () => {
   sortByNewDate();
+
 });
 
 // 名前選択後、textareaに自動的にカーソルが当たる
