@@ -1,4 +1,5 @@
 'use strict';
+console.log("hoge")
 
 // *************************************** Google Sheets API **************************************************
 //  * スプレッドシート
@@ -79,19 +80,17 @@ async function sortByNewDate() {
     const deleteCell = document.createElement('td');
     deleteCell.className = 'border text-center w-[5rem]';
     const deleteIcon = document.createElement('i');
-    deleteIcon.className = 'material-icons';
+    deleteIcon.className = 'material-icons active:translate-y-2';
     deleteIcon.textContent = 'delete';
     deleteCell.classList.add('cursor-pointer');
     deleteCell.appendChild(deleteIcon);
-    // クリックイベントに対してクロージャを使用して、iの値を保存
-    deleteIcon.addEventListener('click', (function (index) {
-      return function () {
-        const confirmation = confirm('Are you sure?');
-        if (confirmation) {
-          deleteDiary(index);
-        }
-      };
-    })(i));
+    // deleteIconがクリックされたときの処理
+    deleteIcon.addEventListener('click', () => {
+      const confirmation = confirm('Are you sure?');
+      if (confirmation) {
+        deleteDiary(i);
+      }
+    });
     newRow.appendChild(deleteCell);
     tableBody.appendChild(newRow); // 新しく行を追加する。
   }
