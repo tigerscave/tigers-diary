@@ -8,7 +8,6 @@ console.log("hoge")
 
 // スプレッドシート表出に必要な定義
 const tableBody = document.getElementById('gapi-sheets');
-const errorView = document.getElementById('error-view');
 
 // ***********************************日時の新しい順番にソートする関数***********************************************
 async function sortByNewDate() {
@@ -20,7 +19,7 @@ async function sortByNewDate() {
       range: 'master!A2:E100',// 範囲指定
     });
   } catch (err) {
-    errorView.innerText = err.message;
+    console.error('failed to get the data...');
     return;
   }
   // 名前が選択されていたら、フィルタリングを行う。
@@ -36,7 +35,7 @@ async function sortByNewDate() {
   }
   // エラー処理
   if (!filteredData || filteredData.length == 0) {
-    errorView.innerText = 'No values found.';
+    console.error('error');
     return;
   }
 
@@ -70,10 +69,23 @@ async function sortByNewDate() {
     const editCell = document.createElement('td');
     editCell.className = 'border text-center w-[5rem]';
     const editIcon = document.createElement('i');
-    editIcon.className = 'material-icons';
+    editIcon.className = 'material-icons active:translate-y-2';
     editIcon.textContent = 'edit';
     editCell.classList.add('cursor-pointer');
+    if(selectedName) {
+      editIcon.classList.add('disabled');
+    }
     editCell.appendChild(editIcon);
+    // editIconがクリックされたときの処理
+    editIcon.addEventListener('click', () => {
+      if(!selectedName) {
+        modal.classList.remove('hidden');
+        const editContentElement = document.getElementById('edit-content');
+        editContentElement.value = content;
+        saveEditBtn.setAttribute('data-index', i);
+        editContentElement.focus();
+      }
+    });
     newRow.appendChild(editCell);
 
     // 削除アイコンの処理
@@ -83,12 +95,17 @@ async function sortByNewDate() {
     deleteIcon.className = 'material-icons active:translate-y-2';
     deleteIcon.textContent = 'delete';
     deleteCell.classList.add('cursor-pointer');
+    if(selectedName) {
+      deleteIcon.classList.add('disabled');
+    }
     deleteCell.appendChild(deleteIcon);
     // deleteIconがクリックされたときの処理
     deleteIcon.addEventListener('click', () => {
-      const confirmation = confirm('Are you sure?');
-      if (confirmation) {
-        deleteDiary(i);
+      if(!selectedName) {
+        const confirmation = confirm('Are you sure?');
+        if (confirmation) {
+          deleteDiary(i);
+        }
       }
     });
     newRow.appendChild(deleteCell);
@@ -101,6 +118,7 @@ const FilterByNameBtn = document.getElementById("filter-by-name-btn")
 
 FilterByNameBtn.addEventListener('click', () => {
   sortByNewDate();
+
 });
 
 // 名前選択後、textareaに自動的にカーソルが当たる
