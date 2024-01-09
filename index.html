@@ -13,13 +13,13 @@
     <div class="ml-3 text-xl">Tigers Diary</div>
     <div class="ml-5 text-xl">v1.1.0</div>
   </div>
-  <!--サインイン、サインアウトのボタン-->
+  <!--Authorize、Sign Outのボタン-->
   <button id="authorize-btn"
     class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md ml-2">Authorize</button>
   <button id="signout-btn"
     class="bg-blue-100 hover:bg-blue-700 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md ml-2">Sign
     Out</button>
-  <!--日記を追記する箇所（暫定）-->
+  <!--日記投稿で使用。名前と日記の内容を記述→Postボタンで投稿。Filter by nameボタンで名前のフィルタリング。-->
   <div class="flex mt-3">
     <label for="name-select" class="mr-3 ml-2">Name</label>
     <select name="all-writer" id="writer" class="p-1 border border-black appearance-none cursor-pointer">
@@ -37,12 +37,28 @@
   </div>
   <div class="flex mt-2">
     <button id="post-btn"
-      class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Post</button>
+      class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8"
+      disable>Post</button>
     <button id="filter-by-name-btn"
       class=" bg-orange-100 hover:bg-orange-500 py-2 px-4 rounded border border-x-black shadow-black/30 shadow-md mt-4 ml-8">Filter
       by name</button>
+    <div class="mt-6 ml-5 text-l"> ※ 編集と削除ボタンは、日記一覧表示時のみ有効です。名前ソート時は不可。disabled中です。※</div>
   </div>
-  <!--Topページ-->
+  <!--モーダルウィンドウ 編集ボタンが押されたときに出現↓↓↓-->
+  <div id="modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-7 mx-auto p-5 border w-[50rem] shadow-lg rounded-md bg-white">
+      <div class="mt-3 text-center w-[48rem]">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Edit Mode</h3>
+        <!-- 編集用のテキストエリア -->
+        <textarea id="edit-content" rows="3" class="mt-2 px-4 py-2 border rounded-md w-[45rem]"></textarea>
+        <!-- 編集を確定するボタン -->
+        <button id="cancel-edit" class="mt-3 px-4 py-2 mr-[8rem] bg-blue-500 text-white rounded">Cancel</button>
+        <button id="save-edit" class="mt-3 px-4 py-2 bg-blue-500 text-white rounded">Save</button>
+      </div>
+    </div>
+  </div>
+  <!--モーダルウィンドウ ↑↑↑ここまで↑↑↑ -->
+  <!--以下のHTMLに、日記が表示される。-->
   <div id="top-page" class="mt-4 ml-5">
     <table class="border" id="gapi-sheets-items">
       <tr class="border">
@@ -61,6 +77,7 @@
 
   <script src="./main.js"></script>
   <script src="./postDiary.js"></script>
+  <script src="./editDiary.js"></script>
   <script src="./deleteDiary.js"></script>
   <script src="./OAuth2.0.js"></script>
   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>

@@ -8,6 +8,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    translate: {
+      '2':'2px',
+    },
   },
   plugins: [],
 }

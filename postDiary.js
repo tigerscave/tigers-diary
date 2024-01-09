@@ -25,15 +25,17 @@ async function appendDiary(spreadsheetId, range, valueInputOption, _values, call
   const body = {
     values: values,
   };
+
+  // 日記を投稿する際に、使ってはいけないNGワード。使うと、アラートが出て、やり直しになる。
+  const ngWords = ['クソ', 'くそ', 'kuso', 'kasu', '無理', 'かす', 'むり', 'できない', 'うんち', 'fuck', '失敗', 'ごみ', 'ゴミ', 'つかえない', '使えない', 'だめ', 'ダメ', '没', 'ボツ'];
+  if (ngWords.some(word => diaryContent.includes(word))) {
+    alert('You did good job.Could you please express your thoughs using positive words?Thank you.NGワードが含まれているため、投稿できません。');
+    console.log('NGワードが含まれているため、投稿できません。');
+    return;
+  }
+
   let response;
   try {
-    // 日記を投稿する際に、使ってはいけないNGワード。使うと、アラートが出て、やり直しになる。
-    const ngWords = ['クソ', 'くそ', 'kuso', 'kasu', '無理', 'かす', 'むり', 'できない', 'うんち', 'fuck', '失敗', 'ごみ', 'ゴミ', 'つかえない', '使えない', 'だめ', 'ダメ', '没', 'ボツ'];
-    if (ngWords.some(word => diaryContent.includes(word))) {
-      alert('You did good job.Could you please express your thoughs using positive words?Thank you.');
-      console.log('NGワードが含まれているため、投稿できません。');
-      return;
-    }
     response = await gapi.client.sheets.spreadsheets.values.append({
       spreadsheetId: '1B4hwoTq-6DYXZMg163A-hFLWEJZyZBEqoNg9VVRP7rI',
       range: 'master!A18:E18',
@@ -46,7 +48,7 @@ async function appendDiary(spreadsheetId, range, valueInputOption, _values, call
       if (callback) callback(response);
     });
   } catch (err) {
-    errorView.innerText = err.message;
+    console.error('failed to "post" the data...', err.message)
     return;
   }
 }
